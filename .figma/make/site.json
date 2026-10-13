@@ -1,0 +1,10 @@
+{
+  "description": "Streamlines business operations by delivering tailored CRM, ERP, AI, and marketing automation solutions to help companies automate workflows and accelerate growth.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
