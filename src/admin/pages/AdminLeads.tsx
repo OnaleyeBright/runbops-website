@@ -57,6 +57,76 @@ export default function AdminLeads() {
       active = false;
     };
   }, []);
+
+  
+function exportLeadsCSV() {
+  if (leads.length === 0) return;
+
+  const headers = [
+    "Name",
+    "Email",
+    "Company",
+    "Phone",
+    "Service",
+    "Budget",
+    "Timeline",
+    "Project Description",
+    "Preferred Contact Methods",
+    "Status",
+    "Internal Notes",
+    "Submission Date",
+  ];
+
+  function csvCell(value: unknown): string {
+    let text = String(value ?? "");
+
+    // Prevent spreadsheet applications from interpreting
+    // user-submitted text as executable formulas.
+    if (/^[\s\uFEFF]*[=+\-@]/.test(text)) {
+      text = "'" + text;
+    }
+
+    return `"${text.replace(/"/g, '""')}"`;
+  }
+
+  const rows = leads.map((lead) => [
+    lead.name,
+    lead.email,
+    lead.company,
+    lead.phone,
+    lead.service,
+    lead.budget,
+    lead.timeline,
+    lead.message,
+    lead.contact_methods?.join(", "),
+    lead.status,
+    lead.internal_notes,
+    lead.created_at,
+  ]);
+
+  const csv = [headers, ...rows]
+    .map((row) => row.map(csvCell).join(","))
+    .join("\r\n");
+
+  const blob = new Blob(["\uFEFF", csv], {
+    type: "text/csv;charset=utf-8;",
+  });
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = `runbops-leads-${new Date()
+    .toISOString()
+    .slice(0, 10)}.csv`;
+
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  URL.revokeObjectURL(url);
+}
+
 async function saveLeadStatus() {
   if (!selected || saving) return;
 
@@ -130,9 +200,19 @@ setSelected((previous) =>
         </div>
 
         <div className="data-card">
-          <div className="data-head">
-            <h2>Incoming leads</h2>
-          </div>
+          
+<div className="data-head">
+  <h2>Incoming leads</h2>
+
+  <Button
+    variant="dark"
+    onClick={exportLeadsCSV}
+    disabled={loading || !!error || leads.length === 0}
+  >
+    Export CSV
+  </Button>
+</div>
+
 
           <div className="data-table">
             {loading ? (

@@ -363,3 +363,22 @@ overscroll-behavior: contain;}.lead-drawer > .lead-drawer-close button { positio
   margin-top: 28px;
   padding-bottom: 24px;
 }
+/* Admin Leads - Export CSV button */
+
+.data-head .button.button-dark {
+  background-color: var(--ink);
+  color: #ffffff;
+  border: 1px solid var(--ink);
+  align-items: center;
+  cursor: pointer;
+}
+
+.data-head .button.button-dark:hover {
+  background-color: #35362f;
+  color: #ffffff;
+}
+
+.data-head .button.button-dark:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
